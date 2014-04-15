@@ -14,7 +14,7 @@ using cluster::EquivMutClassExtIterator;
 
 namespace qvmmi {
 	FastMMIMaster::FastMMIMaster(const QuiverMatrix& mat) :
-		matrix_(mat), status_(), map_() {}
+		Master(mat) {}
 
 	void FastMMIMaster::run() {
 		int number = MPI::COMM_WORLD.Get_size();
@@ -23,14 +23,18 @@ namespace qvmmi {
 
 		/* Send initial matrices to workers. */
 		for(int i = 1; i < number; ++i) {
-			send_matrix(iter.next(), i);
+			QuiverMatrix matrix = iter.next();
+			send_matrix(matrix, i);
+			map_[i] = matrix;
 		}
 
 		while(iter.has_next()) {
 			int result = receive_result();
 			int worker = status_.Get_source();
 			handle_result(result, worker);
-			send_matrix(iter.next(), worker);
+			QuiverMatrix matrix = iter.next();
+			send_matrix(matrix, worker);
+			map_[worker] = matrix;
 		}
 		/* Wait for remaining tasks. */
 		for(int i = 1; i < number; ++i) {
@@ -38,25 +42,7 @@ namespace qvmmi {
 			int worker = status_.Get_source();
 			handle_result(result, worker);
 		}
-		send_shutdown(number);
-	}
-
-	void FastMMIMaster::send_matrix(const QuiverMatrix& matrix, int worker) {
-		int size = matrix.num_rows() * matrix.num_cols() + 2;
-		MPI::COMM_WORLD.Send(&size, 1, MPI::INT, worker, SIZE_TAG);
-		MPI::COMM_WORLD.Recv(NULL, 0, MPI::BYTE, worker, OK_TAG);
-		int* arr = codec_.encode(matrix);
-		MPI::COMM_WORLD.Send(arr, size, MPI::INT, worker, MATRIX_TAG);
-		delete [] arr;
-		
-		map_[worker] = matrix;
-	}
-
-	int FastMMIMaster::receive_result() {
-		int result;
-		MPI::COMM_WORLD.Recv(&result, 1, MPI::INT, MPI::ANY_SOURCE, RESULT_TAG,
-				status_);
-		return result;
+		send_shutdown();
 	}
 
 	void FastMMIMaster::handle_result(int result, int worker) {
@@ -64,12 +50,6 @@ namespace qvmmi {
 			/* Matrix is mmi. */
 			QuiverMatrix mat = map_[worker];
 			std::cout << mat << std::endl;
-		}
-	}
-
-	void FastMMIMaster::send_shutdown(int number) {
-		for(int i = 1; i < number; ++i) {
-			MPI::COMM_WORLD.Send(NULL, 0, MPI::BYTE, i, END_TAG);
 		}
 	}
 
