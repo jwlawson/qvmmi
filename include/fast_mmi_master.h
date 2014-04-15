@@ -22,7 +22,8 @@ namespace qvmmi {
 			std::map<int, QuiverMatrix> map_;
 
 			void send_matrix(const QuiverMatrix& matrix, int worker);
-			void receive_result();
+			int receive_result();
+			void handle_result(int result, int worker);
 			void send_shutdown(int number);
 	};
 }

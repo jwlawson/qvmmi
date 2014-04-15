@@ -25,28 +25,18 @@ namespace qvmmi {
 		for(int i = 1; i < number; ++i) {
 			send_matrix(iter.next(), i);
 		}
-		int result;
+
 		while(iter.has_next()) {
-			MPI::COMM_WORLD.Recv(&result, 1, MPI::INT, MPI::ANY_SOURCE, RESULT_TAG,
-					status_);
+			int result = receive_result();
 			int worker = status_.Get_source();
-			if(result == 1) {
-				/* Matrix is mmi. */
-				QuiverMatrix mat = map_[worker];
-				std::cout << mat << std::endl;
-			}
+			handle_result(result, worker);
 			send_matrix(iter.next(), worker);
 		}
 		/* Wait for remaining tasks. */
 		for(int i = 1; i < number; ++i) {
-			MPI::COMM_WORLD.Recv(&result, 1, MPI::INT, MPI::ANY_SOURCE, RESULT_TAG,
-					status_);
+			int result = receive_result();
 			int worker = status_.Get_source();
-			if(result == 1) {
-				/* Matrix is mmi. */
-				QuiverMatrix mat = map_[worker];
-				std::cout << mat << std::endl;
-			}
+			handle_result(result, worker);
 		}
 		send_shutdown(number);
 	}
@@ -60,6 +50,21 @@ namespace qvmmi {
 		delete [] arr;
 		
 		map_[worker] = matrix;
+	}
+
+	int FastMMIMaster::receive_result() {
+		int result;
+		MPI::COMM_WORLD.Recv(&result, 1, MPI::INT, MPI::ANY_SOURCE, RESULT_TAG,
+				status_);
+		return result;
+	}
+
+	void FastMMIMaster::handle_result(int result, int worker) {
+		if(result == 1) {
+			/* Matrix is mmi. */
+			QuiverMatrix mat = map_[worker];
+			std::cout << mat << std::endl;
+		}
 	}
 
 	void FastMMIMaster::send_shutdown(int number) {
