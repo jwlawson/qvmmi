@@ -1,6 +1,7 @@
 /*
  * slave.h
  */
+#pragma once
 
 #include <mpi.h>
 #include "quiver_matrix.h"

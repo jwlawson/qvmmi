@@ -1,6 +1,7 @@
 /*
  * master.h
  */
+#pragma once
 
 #include <mpi.h>
 #include "codec.h"
@@ -12,11 +13,11 @@ namespace qvmmi {
 
 	class Master {
 		public:
-			Master(const QuiverMatrix& matrix);
+			Master();
 			virtual void run() = 0;
 
 		protected:
-			QuiverMatrix matrix_;
+			int num_proc_;
 			MPI::Status status_;
 
 			void send_matrix(const QuiverMatrix& matrix, int worker);

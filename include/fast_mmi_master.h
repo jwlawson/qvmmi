@@ -1,9 +1,13 @@
 /*
  * fast_mmi_master.h
  */
-#include <mpi.h>
-#include "master.h"
+#pragma once
+
 #include <map>
+
+#include <mpi.h>
+
+#include "master.h"
 
 using cluster::QuiverMatrix;
 
@@ -18,6 +22,7 @@ namespace qvmmi {
 			virtual void handle_result(int result, int worker);
 
 		private:
+			QuiverMatrix matrix_;
 			std::map<int, QuiverMatrix> map_;
 
 	};

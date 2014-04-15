@@ -7,7 +7,9 @@
 
 namespace qvmmi {
 
-	Master::Master(const QuiverMatrix& mat) : matrix_(mat) {}
+	Master::Master() {
+		num_proc_ = MPI::COMM_WORLD.Get_size();
+	}
 
 	void Master::send_matrix(const QuiverMatrix& matrix, int worker) {
 		int size = matrix.num_rows() * matrix.num_cols() + 2;

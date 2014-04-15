@@ -2,27 +2,20 @@
  * fast_mmi_master.cc
  */
 
-#include "fast_mmi_master.h"
 #include "class_ext_iterator.h"
 #include "codec.h"
-#include "mpi_tags.h"
-
-using cluster::QuiverMatrix;
-using cluster::ExtensionIterator;
-using cluster::EquivMutationClass;
-using cluster::EquivMutClassExtIterator;
+#include "fast_mmi_master.h"
 
 namespace qvmmi {
 	FastMMIMaster::FastMMIMaster(const QuiverMatrix& mat) :
-		Master(mat) {}
+		matrix_(mat) {}
 
 	void FastMMIMaster::run() {
-		int number = MPI::COMM_WORLD.Get_size();
-		
+		using cluster::EquivMutClassExtIterator;
 		EquivMutClassExtIterator iter(matrix_);
 
 		/* Send initial matrices to workers. */
-		for(int i = 1; i < number; ++i) {
+		for(int i = 1; i < num_proc_; ++i) {
 			QuiverMatrix matrix = iter.next();
 			send_matrix(matrix, i);
 			map_[i] = matrix;
@@ -37,7 +30,7 @@ namespace qvmmi {
 			map_[worker] = matrix;
 		}
 		/* Wait for remaining tasks. */
-		for(int i = 1; i < number; ++i) {
+		for(int i = 1; i < num_proc_; ++i) {
 			int result = receive_result();
 			int worker = status_.Get_source();
 			handle_result(result, worker);
