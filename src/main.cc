@@ -89,8 +89,6 @@ int main(int argc, char* argv[]) {
 		std::cout << "Specify an option" << std::endl;
 	}
 
-
-
 	MPI::Finalize();
 	return 0;
 }
