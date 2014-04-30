@@ -1,10 +1,10 @@
 /*
  * fast_mmi_master.cc
  */
+#include "fast_mmi_master.h"
 
 #include "class_ext_iterator.h"
 #include "codec.h"
-#include "fast_mmi_master.h"
 
 namespace qvmmi {
 	FastMMIMaster::FastMMIMaster(const QuiverMatrix& mat) :

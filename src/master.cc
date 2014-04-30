@@ -1,8 +1,8 @@
 /*
  * master.cc
  */
-
 #include "master.h"
+
 #include "mpi_tags.h"
 
 namespace qvmmi {

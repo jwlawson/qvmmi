@@ -5,8 +5,6 @@
 
 #include <map>
 
-#include <mpi.h>
-
 #include "master.h"
 
 using cluster::QuiverMatrix;

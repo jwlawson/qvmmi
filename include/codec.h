@@ -2,7 +2,6 @@
  * codec.h
  */
 #pragma once
-#include <memory>
 
 namespace qvmmi {
 	template<class T>

@@ -1,14 +1,11 @@
 /*
  * slave.cc
  */
-
-#include "mmi.h"
 #include "slave.h"
-#include "mpi_tags.h"
-#include "codec.h"
 
-using cluster::QuiverMatrix;
-using cluster::mmi::fast_mmi;
+#include "codec.h"
+#include "mmi.h"
+#include "mpi_tags.h"
 
 namespace qvmmi {
 
