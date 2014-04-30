@@ -31,7 +31,7 @@ namespace qvmmi {
 		int* arr = new int[size];
 		MPI::COMM_WORLD.Recv(arr, size, MPI::INT, MASTER, MATRIX_TAG);
 	
-		matrix_.set(codec_.decode(arr, size));
+		matrix_.set(codec_.decode(arr));
 		delete [] arr;
 
 		return true;

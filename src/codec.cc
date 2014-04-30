@@ -22,7 +22,7 @@ namespace qvmmi {
 		}
 
 		template<class T>
-		T Codec<T>::decode(int* arr, int size) {
+		T Codec<T>::decode(int* arr) {
 			int rows = arr[0];
 			int cols = arr[1];
 			int* val = arr + 2;

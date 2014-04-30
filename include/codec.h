@@ -22,7 +22,7 @@ namespace qvmmi {
 		 * @param arr Pointer to the array
 		 * @return Matrix stored in the array
 		 */
-		T decode(int* arr, int size);
+		T decode(int* arr);
 
 	};
 }
