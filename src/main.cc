@@ -14,6 +14,10 @@
 #include "class_size_slave.h"
 #include "slow_check_master.h"
 
+void usage() {
+	std::cout << "qvmmi [-sf] [-d diagram | -m matrix | -i input ]" << std::endl;
+}
+
 int main(int argc, char* argv[]) {
 
 	MPI::Init(argc, argv);
@@ -22,15 +26,20 @@ int main(int argc, char* argv[]) {
 	int opt;
 	bool slow = false;
 	bool fast = false;
+	bool dynkin = false;
 	std::string matrix;
 	std::string input;
-	while ((opt = getopt (argc, argv, "fsm:i:")) != -1){
+	while ((opt = getopt (argc, argv, "fsd:m:i:")) != -1){
 		switch (opt) {
 			case 'f':
 				fast = true;
 				break;
 			case 's':
 				slow = true;
+				break;
+			case 'd':
+				matrix = optarg;
+				dynkin = true;
 				break;
 			case 'm':
 				matrix = optarg;
@@ -68,14 +77,18 @@ int main(int argc, char* argv[]) {
 		}
 
 	} else if(fast) {
-		try{
-			cluster::dynkin::MAP.at(matrix);
-		} catch(std::logic_error e) {
-			MPI::Finalize();
-			return 1;
+		QuiverMatrix mat;
+		if(dynkin) {
+			try{
+				cluster::dynkin::MAP.at(matrix);
+			} catch(std::logic_error e) {
+				MPI::Finalize();
+				return 1;
+			}
+			mat = cluster::dynkin::MAP.at(matrix);
+		} else {
+			mat = QuiverMatrix(matrix);
 		}
-
-		QuiverMatrix mat = cluster::dynkin::MAP.at(matrix);
 		if(rank == MASTER) {
 			qvmmi::FastMMIMaster m(mat);
 			m.run();
@@ -86,6 +99,7 @@ int main(int argc, char* argv[]) {
 
 		}
 	} else {
+		usage();
 		std::cout << "Specify an option" << std::endl;
 	}
 
