@@ -3,34 +3,35 @@
  */
 #include "fast_mmi_master.h"
 
-#include "class_ext_iterator.h"
-#include "codec.h"
-
 namespace qvmmi {
-	FastMMIMaster::FastMMIMaster(const QuiverMatrix& mat) :
-		matrix_(mat) {}
+	FastMMIMaster::FastMMIMaster(const Matrix& mat) :
+		iter_(mat) {}
 
 	void FastMMIMaster::run() {
-		using cluster::EquivMutClassExtIterator;
-		EquivMutClassExtIterator iter(matrix_);
-
+		/* 
+		 * Keep track of how many tasks were originally submitted. It oculd happen
+		 * that fewer tasks are generated and sent than there are cores, so don't
+		 * want to be waiting for tasks to return which were never submitted.
+		 */
+		int submitted = 0;
 		/* Send initial matrices to workers. */
-		for(int i = 1; i < num_proc_; ++i) {
-			QuiverMatrix matrix = iter.next();
+		for(int i = 1; i < num_proc_ && iter_.has_next(); ++i) {
+			Matrix matrix = iter_.next();
 			send_matrix(matrix, i);
 			map_[i] = matrix;
+			submitted++;
 		}
 
-		while(iter.has_next()) {
+		while(iter_.has_next()) {
 			int result = receive_result();
 			int worker = status_.Get_source();
 			handle_result(result, worker);
-			QuiverMatrix matrix = iter.next();
+			Matrix matrix = iter_.next();
 			send_matrix(matrix, worker);
 			map_[worker] = matrix;
 		}
 		/* Wait for remaining tasks. */
-		for(int i = 1; i < num_proc_; ++i) {
+		for(int i = 1; i < submitted; ++i) {
 			int result = receive_result();
 			int worker = status_.Get_source();
 			handle_result(result, worker);
@@ -41,7 +42,7 @@ namespace qvmmi {
 	void FastMMIMaster::handle_result(int result, int worker) {
 		if(result == 1) {
 			/* Matrix is mmi. */
-			QuiverMatrix mat = map_[worker];
+			Matrix mat = map_[worker];
 			std::cout << mat << std::endl;
 		}
 	}

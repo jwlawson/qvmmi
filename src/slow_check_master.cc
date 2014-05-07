@@ -14,11 +14,17 @@ namespace qvmmi {
 		: Master(), running_(), map_(), iter_(input){}
 
 	void SlowCheckMaster::run() {
-
+		/* 
+		 * Keep track of how many tasks were originally submitted. It oculd happen
+		 * that fewer tasks are generated and sent than there are cores, so don't
+		 * want to be waiting for tasks to return which were never submitted.
+		 */
+		int submitted = 0;
 		/* Send initial matrices to workers. */
 		for(int i = 1; i < num_proc_ && iter_.has_next(); ++i) {
 			running_[i] = iter_.next_info();
 			send_matrix(*(running_[i].submatrix), i);
+			submitted++;
 		}
 
 		while(iter_.has_next()) {
@@ -29,7 +35,7 @@ namespace qvmmi {
 			send_matrix(*running_[worker].submatrix, worker);
 		}
 		/* Wait for remaining tasks. */
-		for(int i = 1; i < num_proc_; ++i) {
+		for(int i = 1; i < submitted; ++i) {
 			int result = receive_result();
 			int worker = status_.Get_source();
 			handle_result(result, worker);
