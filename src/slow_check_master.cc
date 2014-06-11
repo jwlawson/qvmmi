@@ -19,7 +19,7 @@ namespace qvmmi {
 		 * that fewer tasks are generated and sent than there are cores, so don't
 		 * want to be waiting for tasks to return which were never submitted.
 		 */
-		int submitted = 0;
+		int submitted = 1;
 		/* Send initial matrices to workers. */
 		for(int i = 1; i < num_proc_ && iter_.has_next(); ++i) {
 			running_[i] = iter_.next_info();
@@ -72,17 +72,19 @@ namespace qvmmi {
 			mmi = false;
 		}
 		bool complete = true;
-		for(uint i = 0; i < tracker.finite_sub.size(); ++i) {
+		for(std::size_t i = 0; i < tracker.finite_sub.size(); ++i) {
 			if(tracker.finite_sub[i] == kUnset) {
 				complete = false;
 			} else if(tracker.finite_sub[i] == kInfinite) {
 				mmi = false;
 			}
 		}
-		if(complete && mmi) {
-			std::cout << *(tracker.matrix) << std::endl;
-		}
 		if(complete) {
+			if(mmi) {
+				std::cout << *(tracker.matrix) << std::endl;
+			} else {
+				std::cerr << "False: " << *(tracker.matrix) << std::endl;
+			}
 			map_.erase(tracker.matrix);
 		}
 	}
