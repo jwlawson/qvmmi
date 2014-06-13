@@ -3,7 +3,7 @@
  */
 
 #include "class_size_slave.h"
-#include "equiv_mutation_class_size.h"
+#include "qv/equiv_mutation_class_size.h"
 
 namespace qvmmi {
 

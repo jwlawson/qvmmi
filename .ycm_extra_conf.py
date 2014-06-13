@@ -68,7 +68,9 @@ flags = [
 '-I',
 './lib/include',
 '-I',
-'/usr/include/openmpi-x86_64'
+'/usr/include/openmpi-x86_64',
+'-I',
+'/home/grads/njcz19/include'
 ]
 
 

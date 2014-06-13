@@ -3,8 +3,9 @@
  */
 #include "slave.h"
 
+#include "qv/mmi.h"
+
 #include "codec.h"
-#include "mmi.h"
 #include "mpi_tags.h"
 
 namespace qvmmi {

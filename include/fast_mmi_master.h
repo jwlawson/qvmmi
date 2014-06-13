@@ -5,7 +5,8 @@
 
 #include <map>
 
-#include "class_ext_iterator.h"
+#include "qv/class_ext_iterator.h"
+
 #include "master.h"
 
 namespace qvmmi {

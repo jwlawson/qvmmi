@@ -3,7 +3,7 @@
  */
 #include "codec.h"
 
-#include "quiver_matrix.h"
+#include "qv/quiver_matrix.h"
 
 namespace qvmmi {
 

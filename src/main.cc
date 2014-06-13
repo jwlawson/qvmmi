@@ -5,13 +5,13 @@
 #include <fstream>
 #include <string>
 
-#include "dynkin.h"
+#include "qv/dynkin.h"
+#include "qv/quiver_matrix.h"
+
+#include "class_size_slave.h"
 #include "fast_mmi_slave.h"
 #include "fast_mmi_master.h"
 #include "mpi_tags.h"
-#include "quiver_matrix.h"
-
-#include "class_size_slave.h"
 #include "slow_check_master.h"
 
 void usage() {

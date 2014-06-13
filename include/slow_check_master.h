@@ -8,7 +8,7 @@
 #include <unordered_map>
 
 #include "master.h"
-#include "stream_submatrix_iterator.h"
+#include "qv/stream_submatrix_iterator.h"
 
 namespace qvmmi {
 	class SlowCheckMaster : Master {

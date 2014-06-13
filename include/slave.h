@@ -4,7 +4,7 @@
 #pragma once
 
 #include <mpi.h>
-#include "quiver_matrix.h"
+#include "qv/quiver_matrix.h"
 #include "codec.h"
 
 namespace qvmmi {

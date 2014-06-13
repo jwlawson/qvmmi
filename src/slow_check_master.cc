@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <string>
 
-#include "submatrix_iterator.h"
+#include "qv/submatrix_iterator.h"
 
 namespace qvmmi {
 

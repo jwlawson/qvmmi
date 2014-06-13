@@ -3,7 +3,7 @@
  */
 #include "fast_mmi_slave.h"
 
-#include "mmi.h"
+#include "qv/mmi.h"
 
 namespace qvmmi {
 
