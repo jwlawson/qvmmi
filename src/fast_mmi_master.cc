@@ -2,6 +2,7 @@
  * fast_mmi_master.cc
  */
 #include "fast_mmi_master.h"
+#include <iostream>
 
 namespace qvmmi {
 	FastMMIMaster::FastMMIMaster(const Matrix& mat) :
