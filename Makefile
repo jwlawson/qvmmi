@@ -10,7 +10,7 @@
 CXXFLAGS = -Wall -Wextra -Wpedantic -std=gnu++11 -march=native
 OPT = -g -O3
 
-CXX = /usr/lib64/openmpi/bin/mpic++
+CXX = mpic++
 
 # Specify base directory
 BASE_DIR = .

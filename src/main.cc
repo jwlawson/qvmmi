@@ -79,9 +79,7 @@ int main(int argc, char* argv[]) {
 	} else if(fast) {
 		QuiverMatrix mat;
 		if(dynkin) {
-			try{
-				cluster::dynkin::MAP.at(matrix);
-			} catch(std::logic_error e) {
+			if(cluster::dynkin::MAP.count(matrix) == 0){
 				MPI::Finalize();
 				return 1;
 			}
