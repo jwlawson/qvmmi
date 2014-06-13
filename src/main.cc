@@ -18,6 +18,16 @@ void usage() {
 	std::cout << "qvmmi [-sf] [-d diagram | -m matrix | -i input ]" << std::endl;
 }
 
+bool valid_dynkin(std::string matrix) {
+	return cluster::dynkin::MAP.count(matrix) != 0;
+}
+
+QuiverMatrix get_matrix(bool dynkin, std::string matrix) {
+	if(dynkin) {
+		return cluster::dynkin::MAP.at(matrix);
+	}
+	return QuiverMatrix(matrix);
+}
 int main(int argc, char* argv[]) {
 
 	MPI::Init(argc, argv);
@@ -77,21 +87,20 @@ int main(int argc, char* argv[]) {
 		}
 
 	} else if(fast) {
-		QuiverMatrix mat;
-		if(dynkin) {
-			if(cluster::dynkin::MAP.count(matrix) == 0){
+		if(rank == MASTER) {
+			if(dynkin && !valid_dynkin(matrix)){
+				std::cout << "Invalid matrix" << std::endl;
 				MPI::Finalize();
 				return 1;
 			}
-			mat = cluster::dynkin::MAP.at(matrix);
-		} else {
-			mat = QuiverMatrix(matrix);
-		}
-		if(rank == MASTER) {
+			QuiverMatrix mat = get_matrix(dynkin, matrix);
 			qvmmi::FastMMIMaster m(mat);
 			m.run();
-
 		} else {
+			if(dynkin && !valid_dynkin(matrix)){
+				MPI::Finalize();
+				return 1;
+			}
 			qvmmi::FastMMISlave s;
 			s.run();
 
