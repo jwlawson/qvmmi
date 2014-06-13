@@ -1,7 +1,7 @@
 /*
  * class_size_slave.h
  */
-
+#pragma once
 #include "slave.h"
 
 namespace qvmmi {

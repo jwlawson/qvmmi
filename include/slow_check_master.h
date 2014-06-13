@@ -2,12 +2,12 @@
  * slow_check_master.h
  */
 #pragma once
+#include "master.h"
 
 #include <istream>
 #include <map>
 #include <unordered_map>
 
-#include "master.h"
 #include "qv/stream_submatrix_iterator.h"
 
 namespace qvmmi {

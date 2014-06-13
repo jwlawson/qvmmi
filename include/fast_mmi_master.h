@@ -2,12 +2,11 @@
  * fast_mmi_master.h
  */
 #pragma once
+#include "master.h"
 
 #include <map>
 
 #include "qv/class_ext_iterator.h"
-
-#include "master.h"
 
 namespace qvmmi {
 	class FastMMIMaster : Master {

@@ -1,7 +1,7 @@
 /*
  * fast_mmi_slave.h
  */
-
+#pragma once
 #include "slave.h"
 
 using cluster::QuiverMatrix;

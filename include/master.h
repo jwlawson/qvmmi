@@ -4,8 +4,10 @@
 #pragma once
 
 #include <mpi.h>
-#include "codec.h"
+
 #include "qv/quiver_matrix.h"
+
+#include "codec.h"
 
 namespace qvmmi {
 
