@@ -14,7 +14,7 @@ namespace qvmmi {
 		 * that fewer tasks are generated and sent than there are cores, so don't
 		 * want to be waiting for tasks to return which were never submitted.
 		 */
-		int submitted = 0;
+		int submitted = 1;
 		/* Send initial matrices to workers. */
 		for(int i = 1; i < num_proc_ && iter_.has_next(); ++i) {
 			Matrix matrix = iter_.next();
