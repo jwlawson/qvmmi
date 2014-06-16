@@ -1,6 +1,11 @@
 /*
  * main.cc
  */
+#include "class_size_slave.h"
+#include "fast_mmi_slave.h"
+#include "slow_check_master.h"
+#include "fast_mmi_master.h"
+
 #include <unistd.h>
 #include <fstream>
 #include <string>
@@ -8,11 +13,7 @@
 #include "qv/dynkin.h"
 #include "qv/quiver_matrix.h"
 
-#include "class_size_slave.h"
-#include "fast_mmi_slave.h"
-#include "fast_mmi_master.h"
 #include "mpi_tags.h"
-#include "slow_check_master.h"
 
 void usage() {
 	std::cout << "qvmmi [-sf] [-d diagram | -m matrix | -i input ]" << std::endl;
