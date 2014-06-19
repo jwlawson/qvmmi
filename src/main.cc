@@ -4,6 +4,7 @@
 #include "class_size_slave.h"
 #include "fast_mmi_slave.h"
 #include "slow_check_master.h"
+#include "fast_input_master.h"
 #include "fast_mmi_master.h"
 
 #include <unistd.h>
@@ -89,24 +90,32 @@ int main(int argc, char* argv[]) {
 
 	} else if(fast) {
 		if(rank == MASTER) {
-			if(dynkin && !valid_dynkin(matrix)){
+			if(!input.empty()){
+				std::ifstream file;
+				file.open(input);
+				if(!file.is_open()) {
+					std::cout << "Error opening file "<< input << std::endl;
+					MPI::Finalize();
+					return 1;
+				}
+				qvmmi::FastInputMaster master(file);
+				master.run();
+				file.close();
+			} else if(dynkin && !valid_dynkin(matrix)){
 				std::cout << "Invalid matrix" << std::endl;
 				MPI::Finalize();
 				return 1;
+			} else {
+				QuiverMatrix mat = get_matrix(dynkin, matrix);
+				qvmmi::FastMMIMaster m(mat);
+				m.run();
 			}
-			QuiverMatrix mat = get_matrix(dynkin, matrix);
-			qvmmi::FastMMIMaster m(mat);
-			m.run();
 		} else {
-			if(dynkin && !valid_dynkin(matrix)){
-				MPI::Finalize();
-				return 1;
-			}
 			qvmmi::FastMMISlave s;
 			s.run();
-
 		}
-	} else {
+	} else if(rank == MASTER) {
+		/* Only want this printed once. */
 		usage();
 		std::cout << "Specify an option" << std::endl;
 	}
