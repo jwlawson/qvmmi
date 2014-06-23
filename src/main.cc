@@ -1,7 +1,7 @@
 /*
  * main.cc
  */
-#include "class_size_slave.h"
+#include "sure_finite_slave.h"
 #include "fast_mmi_slave.h"
 #include "slow_check_master.h"
 #include "fast_input_master.h"
@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
 				file.close();
 			}
 		} else {
-			qvmmi::ClassSizeSlave slave;
+			qvmmi::SureFiniteSlave slave;
 			slave.run();
 		}
 

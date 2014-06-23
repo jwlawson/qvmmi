@@ -4,25 +4,26 @@
 #pragma once
 
 #include <mpi.h>
-#include "qv/quiver_matrix.h"
+#include "qv/equiv_quiver_matrix.h"
 #include "codec.h"
 
 namespace qvmmi {
 
-	using cluster::QuiverMatrix;
-
 	template<class T>
 	class Slave {
+		private:
+			typedef cluster::EquivQuiverMatrix Matrix;
+
 		public:
 			void run();
 
 		protected:
-			QuiverMatrix matrix_;
+			Matrix matrix_;
 			virtual T calc_result() = 0;
 
 		private:
 			MPI::Status status_;
-			Codec<QuiverMatrix> codec_;
+			Codec<Matrix> codec_;
 
 			bool receive();
 			void send_result(const T& result);
