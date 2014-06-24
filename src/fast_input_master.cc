@@ -7,7 +7,9 @@ namespace qvmmi {
 
 	FastInputMaster::FastInputMaster(std::istream& input)
 		: iter_(input),
-			map_() {}
+			map_() {
+		iter_.progress(true);
+	}
 
 	void FastInputMaster::run() {
 		/* 
