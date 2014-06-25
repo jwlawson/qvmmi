@@ -8,27 +8,21 @@
  */
 #pragma once
 
-#include "master.h"
+#include "fast_master.h"
+
+#include <unordered_set>
 
 #include "qv/stream_extension_iterator.h"
+#include "qv/equiv_quiver_matrix.h"
 
 namespace qvmmi {
-	class FastInputMaster : Master {
+	class FastInputMaster : public
+			FastMaster<cluster::StreamExtIterator<cluster::EquivQuiverMatrix>> {
 		private:
-			typedef cluster::QuiverMatrix Matrix;
-			typedef std::shared_ptr<Matrix> MatrixPtr;
 			typedef cluster::StreamExtIterator<Matrix> Iter;
 
 		public:
 			FastInputMaster(std::istream& input);
-			virtual void run();
-
-		protected:
-			virtual void handle_result(int result, int worker);
-
-		private:
-			Iter iter_;
-			std::map<int, MatrixPtr> map_;
 	};
 }
 
