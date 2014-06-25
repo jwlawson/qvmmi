@@ -17,7 +17,7 @@
 #include "mpi_tags.h"
 
 void usage() {
-	std::cout << "qvmmi [-sf] [-d diagram | -m matrix | -i input ]" << std::endl;
+	std::cout << "qvmmi [-sf] [-d diagram | -m matrix | -i input ] [-e exclusions]" << std::endl;
 }
 
 bool valid_dynkin(std::string matrix) {
@@ -30,6 +30,24 @@ QuiverMatrix get_matrix(bool dynkin, std::string matrix) {
 	}
 	return QuiverMatrix(matrix);
 }
+
+template<class T>
+bool add_exclusions(std::string excl, qvmmi::FastMaster<T>& master) {
+	if(!excl.empty()) {
+		std::ifstream file;
+		file.open(excl);
+		if(!file.is_open()) {
+			std::cout << "Error opening exclusion file " << excl << std::endl;
+			return false;
+		}
+		cluster::StreamIterator<cluster::EquivQuiverMatrix> iter(file);
+		while(iter.has_next()) {
+			master.add_exception(iter.next());
+		}
+	}
+	return true;
+}
+
 int main(int argc, char* argv[]) {
 
 	MPI::Init(argc, argv);
@@ -41,7 +59,9 @@ int main(int argc, char* argv[]) {
 	bool dynkin = false;
 	std::string matrix;
 	std::string input;
-	while ((opt = getopt (argc, argv, "fsd:m:i:")) != -1){
+	std::string exclusions;
+
+	while ((opt = getopt (argc, argv, "fsd:m:i:e:")) != -1){
 		switch (opt) {
 			case 'f':
 				fast = true;
@@ -58,6 +78,9 @@ int main(int argc, char* argv[]) {
 				break;
 			case 'i':
 				input = optarg;
+				break;
+			case 'e':
+				exclusions = optarg;
 				break;
 			case '?':
 				return 1;
@@ -99,6 +122,7 @@ int main(int argc, char* argv[]) {
 					return 1;
 				}
 				qvmmi::FastInputMaster master(file);
+				add_exclusions(exclusions, master);
 				master.run();
 				file.close();
 			} else if(dynkin && !valid_dynkin(matrix)){
@@ -108,6 +132,7 @@ int main(int argc, char* argv[]) {
 			} else {
 				QuiverMatrix mat = get_matrix(dynkin, matrix);
 				qvmmi::FastMMIMaster m(mat);
+				add_exclusions(exclusions, m);
 				m.run();
 			}
 		} else {
