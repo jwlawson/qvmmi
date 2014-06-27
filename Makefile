@@ -79,6 +79,8 @@ all:   $(MAIN)
 $(MAIN): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(B_OPT) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
 
+install:	$(MAIN)
+	cp $(MAIN) $(HOME)/bin/
 
 # this is a suffix replacement rule for building .o's from .c's
 # it uses automatic variables $<: the name of the prerequisite of
