@@ -17,6 +17,7 @@
 namespace qvmmi {
 	template<class T>
 	class FastMaster : Master {
+		
 		protected:
 			typedef cluster::EquivQuiverMatrix Matrix;
 			typedef std::shared_ptr<Matrix> MatrixPtr;

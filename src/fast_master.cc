@@ -59,6 +59,10 @@ namespace qvmmi {
 			/* Matrix is mmi. */
 			MatrixPtr mat = map_[worker];
 			std::cout << *mat << std::endl;
+		} else if (result == -1) {
+			/* Matrix needs to be checked if finite. */
+			MatrixPtr mat = map_[worker];
+			std::cout << "Finite: " << *mat << std::endl;
 		}
 	}
 

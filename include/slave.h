@@ -11,7 +11,7 @@ namespace qvmmi {
 
 	template<class T>
 	class Slave {
-		private:
+		protected:
 			typedef cluster::EquivQuiverMatrix Matrix;
 
 		public:

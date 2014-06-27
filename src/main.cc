@@ -32,24 +32,6 @@ QuiverMatrix get_matrix(bool dynkin, std::string matrix) {
 	return QuiverMatrix(matrix);
 }
 
-template<class T>
-bool add_finite(const std::string& finite, T& slave) {
-	if(!finite.empty()) {
-		std::ifstream file;
-		file.open(finite);
-		if(!file.is_open()) {
-			std::cerr << "Error opening exclusion file " << finite << std::endl;
-			return false;
-		}
-		cluster::StreamIterator<cluster::EquivQuiverMatrix> iter(file);
-		while(iter.has_next()) {
-			slave.add_finite(iter.next());
-		}
-		file.close();
-	}
-	return true;
-}
-
 int main(int argc, char* argv[]) {
 
 	MPI::Init(argc, argv);
@@ -61,9 +43,8 @@ int main(int argc, char* argv[]) {
 	bool dynkin = false;
 	std::string matrix;
 	std::string input;
-	std::string finite;
 
-	while ((opt = getopt (argc, argv, "fsd:m:i:a:")) != -1){
+	while ((opt = getopt (argc, argv, "fsd:m:i:")) != -1){
 		switch (opt) {
 			case 'f':
 				fast = true;
@@ -80,9 +61,6 @@ int main(int argc, char* argv[]) {
 				break;
 			case 'i':
 				input = optarg;
-				break;
-			case 'a':
-				finite = optarg;
 				break;
 			case '?':
 				return 1;
@@ -110,10 +88,6 @@ int main(int argc, char* argv[]) {
 			}
 		} else {
 			qvmmi::SureFiniteSlave slave;
-			if(!add_finite(finite, slave)) {
-				MPI::Finalize();
-				return 1;
-			}
 			slave.run();
 		}
 
@@ -141,10 +115,6 @@ int main(int argc, char* argv[]) {
 			}
 		} else {
 			qvmmi::FastMMISlave s;
-			if(!add_finite(finite, s)) {
-				MPI::Finalize();
-				return 1;
-			}
 			s.run();
 		}
 	} else if(rank == MASTER) {
