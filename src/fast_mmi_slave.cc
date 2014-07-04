@@ -3,18 +3,28 @@
  */
 #include "fast_mmi_slave.h"
 
-#include "qv/mmi.h"
+#include "qv/fast_infinite.h"
+#include "qv/submatrix_iterator.h"
 
 namespace qvmmi {
 
-	void FastMMISlave::add_finite(const std::shared_ptr<cluster::EquivQuiverMatrix>& mat) {
-		using cluster::mmi::add_finite;
-		add_finite(mat);
+	int FastMMISlave::calc_result() {
+		return mmi(matrix_);
 	}
 
-	bool FastMMISlave::calc_result() {
-		using cluster::mmi::fast_mmi;
-		return fast_mmi(matrix_);
+	int FastMMISlave::mmi(Matrix& matrix) {
+			if(!cluster::fastinf::is_infinite(matrix)) {
+				return -1;
+			} 
+			cluster::SubmatrixIterator<QuiverMatrix> iter(matrix);
+			typedef std::shared_ptr<QuiverMatrix> MatPtr;
+			while(iter.has_next()) {
+				MatPtr n = std::move(iter.next());
+				if(cluster::fastinf::is_infinite(*n)){
+					return 0;
+				}
+			}
+			return 1;
 	}
 
 }

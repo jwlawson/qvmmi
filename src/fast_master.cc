@@ -12,7 +12,6 @@ namespace qvmmi {
 	FastMaster<T>::FastMaster()
 		:	Master(),
 			map_(),
-			set_(),
 			next_(),
 			has_next_(true) {}
 
@@ -60,12 +59,11 @@ namespace qvmmi {
 			/* Matrix is mmi. */
 			MatrixPtr mat = map_[worker];
 			std::cout << *mat << std::endl;
+		} else if (result == -1) {
+			/* Matrix needs to be checked if finite. */
+			MatrixPtr mat = map_[worker];
+			std::cout << "Finite: " << *mat << std::endl;
 		}
-	}
-
-	template<class T>
-	void FastMaster<T>::add_exception(const MatrixPtr& mat) {
-		set_.insert(mat);
 	}
 
 	/**
@@ -76,13 +74,11 @@ namespace qvmmi {
 	template<class T>
 	typename FastMaster<T>::MatrixPtr FastMaster<T>::next() {
 		MatrixPtr matrix;
-		do {
-			if(!iter_.has_next()) {
-				has_next_ = false;
-				return std::move(next_);
-			}
-			matrix = iter_.next();
-		} while(!set_.insert(matrix).second);
+		if(!iter_.has_next()) {
+			has_next_ = false;
+			return std::move(next_);
+		}
+		matrix = iter_.next();
 		std::swap(matrix, next_);
 		return std::move(matrix);
 	}

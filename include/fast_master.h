@@ -17,6 +17,7 @@
 namespace qvmmi {
 	template<class T>
 	class FastMaster : Master {
+		
 		protected:
 			typedef cluster::EquivQuiverMatrix Matrix;
 			typedef std::shared_ptr<Matrix> MatrixPtr;
@@ -30,11 +31,6 @@ namespace qvmmi {
 			 * Each MMI matrix is printed to stdout.
 			 */
 			virtual void run();
-			/**
-			 * Add a matrix which will not be checked.
-			 * @param mat Matrix to ignore
-			 */
-			void add_exception(const MatrixPtr& mat);
 
 		protected:
 			/** Iterator containing the matrices to check. */
@@ -52,11 +48,6 @@ namespace qvmmi {
 			 * worker.
 			 */
 			std::map<int, MatrixPtr> map_;
-			/**
-			 * Set of previously checked matrices and those which should not be
-			 * checked.
-			 */
-			std::unordered_set<MatrixPtr> set_;
 			/** Pointer to the next matrix to check. */
 			MatrixPtr next_;
 			/** True if there is another matrix to check. */
