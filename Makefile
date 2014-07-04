@@ -11,14 +11,14 @@ CXX = mpic++
 COMPILER = $(shell $(CXX) -showme:command)
 
 # Using cygwin -std=gnu++11 should be used rather than -std=c++11
-ifeq ($(COMPILER),g++)
-CXXFLAGS = -Wall -std=gnu++11 -march=native
-OPT = -g -O3
-B_OPT = -g -O3
-else
+ifeq ($(COMPILER),icpc)
 CXXFLAGS = -std=c++11 -xhost
 OPT = -O3 -ipo -no-prec-div
 B_OPT = -O3 -ipo -no-prec-div
+else
+CXXFLAGS = -Wall -std=gnu++11 -march=native
+OPT = -g -O3
+B_OPT = -g -O3
 endif
 
 # Specify base directory
