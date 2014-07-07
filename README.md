@@ -4,7 +4,12 @@ MPI code to find minimally mutation infinite quivers
 
 
 I have tested the code with OpemMPI. The code is provided with a Makefile, to
-compile run `make`. This will compile an executable called `qvmmi`.
+compile run `make`. This will compile an executable called `qvmmi`. By default
+object files are built into a folder named `build` in the base directory. I have
+not yet specified a rule in the Makefile to create this folder, so manually
+create it before building the project.
+
+The project uses the `libqv` library available at https://github.com/jwlawson/qv
 
 Compilation assumes that `mpic++` is on the PATH. If not, then either set the
 PATH to include the MPI binaries, or change `CXX` in the Makefile to specify
@@ -56,6 +61,8 @@ qvmmi [ -s | -f ] [ -d dynkin | -i input | -m matrix ]
 To run the code use either `mpirun` or `mpiexec` to start the program across a
 number of nodes. This requires that either the `mpirun` is called using its full
 path or that the MPI libraries are correctly referenced in `LD_LIBRARY_PATH`.
+
+Also ensure that libqv is in your library path, or compile statically.
 
 ###Example
 - `mpirun -np 4 qvmmi -f -d A3` runs the code on 4 cores and outputs all
