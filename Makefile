@@ -1,21 +1,17 @@
-#
-# 'make depend' uses makedepend to automatically generate dependencies
-#               (dependencies are added to end of Makefile)
-# 'make'        build executable file 'mycc'
-# 'make clean'  removes all .o and executable files
-#
-
-# define any compile-time flags
-
 CXX = mpic++
 COMPILER = $(shell $(CXX) -showme:command)
 
-# Using cygwin -std=gnu++11 should be used rather than -std=c++11
+# OPT is used when compiling object files
+# B_OPT when compiling the final executable binary
 ifeq ($(COMPILER),icpc)
+# Intel optimizations are different to gcc ones
+# When '-O3' is used I have noticed that there are frequently memory corruption
+# issues.
 CXXFLAGS = -std=c++11 -xhost
 OPT = -O3 -ipo -no-prec-div
 B_OPT = -O3 -ipo -no-prec-div
 else
+# Using cygwin -std=gnu++11 should be used rather than -std=c++11
 CXXFLAGS = -Wall -std=gnu++11 -march=native
 OPT = -g -O3
 B_OPT = -g -O3
@@ -34,30 +30,25 @@ TEST_DIR = $(BASE_DIR)/test
 OBJ_DIR = $(BASE_DIR)/build
 
 # define any directories containing header files other than /usr/include
-# -I/home/newhall/include
+# e.g. I/home/include
 INCLUDES = -I$(HOME)/include -I$(BASE_DIR)/include -I$(BASE_DIR)/lib/include
 
 # define library paths in addition to /usr/lib
-#   if I wanted to include libraries not in /usr/lib I'd specify
-#   their path using -Lpath, something like: -L/home/newhall/lib
+# e.g. -L/home/lib
 LFLAGS = -L$(HOME)/lib -L$(BASE_DIR)/lib
 
 # define any libraries to link into executable:
-#   if I want to link in libraries (libx.so or libx.a) I use the -llibname
-#   option, something like (this will link in libmylib.so and libm.so:
 LIBS = -lqv
 
-# define the C source files
+# find the C source files
 SRCS = $(wildcard $(SRC_DIR)/*.cc)
 
 # define the C object files
-#
 # This uses Suffix Replacement within a macro:
 #   $(name:string1=string2)
 #         For each word in 'name' replace 'string1' with 'string2'
 # Below we are replacing the suffix .cc of all words in the macro SRCS
 # with the .o suffix
-#
 _OBJS = $(SRCS:.cc=.o)
 
 # Puts objs in obj_dir
@@ -66,12 +57,6 @@ OBJS = $(patsubst $(SRC_DIR)/%,$(OBJ_DIR)/%,$(_OBJS))
 # define the executable file
 MAIN = qvmmi
 
-#
-# The following part of the makefile is generic; it can be used to
-# build any executable just by changing the definitions above and by
-# deleting dependencies appended to the file from 'make depend'
-#
-
 .PHONY: clean
 
 all:   $(MAIN)
@@ -79,6 +64,7 @@ all:   $(MAIN)
 $(MAIN): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(B_OPT) $(INCLUDES) -o $(MAIN) $(OBJS) $(LFLAGS) $(LIBS)
 
+# Should be made more general
 install:	$(MAIN)
 	cp $(MAIN) $(HOME)/bin/
 
