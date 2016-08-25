@@ -8,20 +8,13 @@
 
 namespace qvmmi {
 
-	template<class T>
-	FastMaster<T>::FastMaster()
+	template<class T, class M>
+	FastMaster<T, M>::FastMaster()
 		:	Master(),
-			map_(),
-			next_(),
-			has_next_(true) {}
+			map_() {}
 
-	template<class T>
-	void FastMaster<T>::run() {
-		/*
-		 * The first call to next() will return an empty shared_ptr, so call now to
-		 * ensure that all subsequent calls are valid.
-		 */
-		next();
+	template<class T, class M>
+	void FastMaster<T, M>::run() {
 		/* 
 		 * Keep track of how many tasks were originally submitted. It oculd happen
 		 * that fewer tasks are generated and sent than there are cores, so don't
@@ -29,20 +22,20 @@ namespace qvmmi {
 		 */
 		int submitted = 1;
 		/* Send initial matrices to workers. */
-		for(int i = 1; i < num_proc_ && has_next_; ++i) {
-			MatrixPtr matrix = next();
-			send_matrix(*matrix, i);
-			map_[i] = matrix;
+		for(int i = 1; i < num_proc_ && iter_.has_next(); ++i) {
+			M const& matrix = iter_.next();
+			send_matrix(matrix, i);
+			map_[i].set_matrix(matrix);
 			submitted++;
 		}
 
-		while(has_next_) {
+		while(iter_.has_next()) {
 			int result = receive_result();
 			int worker = status_.Get_source();
 			handle_result(result, worker);
-			MatrixPtr matrix = next();
-			send_matrix(*matrix, worker);
-			map_[worker] = matrix;
+			M const& matrix = iter_.next();
+			send_matrix(matrix, worker);
+			map_[worker].set_matrix(matrix);
 		}
 		/* Wait for remaining tasks. */
 		for(int i = 1; i < submitted; ++i) {
@@ -51,40 +44,24 @@ namespace qvmmi {
 			handle_result(result, worker);
 		}
 		send_shutdown();
+		std::cout.flush();
 	}
 
-	template<class T>
-	void FastMaster<T>::handle_result(int result, int worker) {
+	template<class T, class M>
+	void FastMaster<T, M>::handle_result(int result, int worker) {
 		if(result == 1) {
 			/* Matrix is mmi. */
-			MatrixPtr mat = map_[worker];
-			std::cout << *mat << std::endl;
+			M const& mat = map_[worker];
+			std::cout << mat << std::cout.widen('\n');
 		} else if (result == -1) {
 			/* Matrix needs to be checked if finite. */
-			MatrixPtr mat = map_[worker];
-			std::cout << "Finite: " << *mat << std::endl;
+			M const& mat = map_[worker];
+			std::cout << "Finite: " << mat << std::cout.widen('\n');
 		}
 	}
 
-	/**
-	 * The next matrix should be stored in next_
-	 * Compute the one after that in matrix, return next_
-	 * then finally set matrix_ to be matrix
-	 */
-	template<class T>
-	typename FastMaster<T>::MatrixPtr FastMaster<T>::next() {
-		MatrixPtr matrix;
-		if(!iter_.has_next()) {
-			has_next_ = false;
-			return std::move(next_);
-		}
-		matrix = iter_.next();
-		std::swap(matrix, next_);
-		return std::move(matrix);
-	}
-
-	template class FastMaster<cluster::StreamExtIterator<cluster::EquivQuiverMatrix>>;
-	template class FastMaster<cluster::EquivMutClassExtIterator>;
+	template class FastMaster<cluster::StreamExtIterator<cluster::QuiverMatrix>, cluster::QuiverMatrix>;
+	template class FastMaster<cluster::EquivMutClassExtIterator, cluster::QuiverMatrix>;
 
 }
 

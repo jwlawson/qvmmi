@@ -22,7 +22,7 @@ namespace qvmmi {
 		int submitted = 1;
 		/* Send initial matrices to workers. */
 		for(int i = 1; i < num_proc_ && iter_.has_next(); ++i) {
-			running_[i] = iter_.next_info();
+			iter_.next_info(running_[i]);
 			send_matrix(*(running_[i].submatrix), i);
 			submitted++;
 		}
@@ -31,7 +31,7 @@ namespace qvmmi {
 			int result = receive_result();
 			int worker = status_.Get_source();
 			handle_result(result, worker);
-			running_[worker] = iter_.next_info();
+			iter_.next_info(running_[worker]);
 			send_matrix(*running_[worker].submatrix, worker);
 		}
 		/* Wait for remaining tasks. */
@@ -41,6 +41,7 @@ namespace qvmmi {
 			handle_result(result, worker);
 		}
 		send_shutdown();
+		std::cout.flush();
 	}
 
 	void SlowCheckMaster::handle_result(int result, int worker) {
@@ -81,7 +82,7 @@ namespace qvmmi {
 		}
 		if(complete) {
 			if(mmi) {
-				std::cout << *(tracker.matrix) << std::endl;
+				std::cout << *(tracker.matrix) << std::cout.widen('\n');
 			} else {
 				std::cerr << "False: " << *(tracker.matrix) << std::endl;
 			}
@@ -91,6 +92,5 @@ namespace qvmmi {
 	const int SlowCheckMaster::kFinite = 1;
 	const int SlowCheckMaster::kInfinite = 0;
 	const int SlowCheckMaster::kUnset = -1; 
-
 }
 

@@ -17,10 +17,9 @@ namespace qvmmi {
 				return -1;
 			} 
 			cluster::SubmatrixIterator<QuiverMatrix> iter(matrix);
-			typedef std::shared_ptr<QuiverMatrix> MatPtr;
 			while(iter.has_next()) {
-				MatPtr n = std::move(iter.next());
-				if(cluster::fastinf::is_infinite(*n)){
+				Matrix const& n = iter.next();
+				if(cluster::fastinf::is_infinite(n)){
 					return 0;
 				}
 			}

@@ -17,9 +17,9 @@
 
 namespace qvmmi {
 	class FastInputMaster : public
-			FastMaster<cluster::StreamExtIterator<cluster::EquivQuiverMatrix>> {
+			FastMaster<cluster::StreamExtIterator<cluster::QuiverMatrix>, cluster::QuiverMatrix> {
 		private:
-			typedef cluster::StreamExtIterator<Matrix> Iter;
+			typedef cluster::StreamExtIterator<cluster::QuiverMatrix> Iter;
 
 		public:
 			FastInputMaster(std::istream& input);

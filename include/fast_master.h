@@ -15,12 +15,8 @@
 #include "qv/equiv_quiver_matrix.h"
 
 namespace qvmmi {
-	template<class T>
+	template<class T, class Matrix>
 	class FastMaster : Master {
-		
-		protected:
-			typedef cluster::EquivQuiverMatrix Matrix;
-			typedef std::shared_ptr<Matrix> MatrixPtr;
 
 		public:
 			FastMaster();
@@ -47,17 +43,7 @@ namespace qvmmi {
 			 * Map from worker node id to the matrix currently being checked by that
 			 * worker.
 			 */
-			std::map<int, MatrixPtr> map_;
-			/** Pointer to the next matrix to check. */
-			MatrixPtr next_;
-			/** True if there is another matrix to check. */
-			bool has_next_;
-
-			/**
-			 * Get the next matrix from the iterator.
-			 * @return Next matrix to check
-			 */
-			MatrixPtr next();
+			std::map<int, Matrix> map_;
 	};
 }
 
