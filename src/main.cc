@@ -17,8 +17,7 @@
 #include "mpi_tags.h"
 
 void usage() {
-	std::cout << "qvmmi [-sf] [-d diagram | -m matrix | -i input ] [-e exclusions]" << std::endl;
-	std::cout << "      [-a finite]" << std::endl;
+	std::cout << "qvmmi [-sf] [-d diagram | -m matrix | -i input ]" << std::endl;
 }
 
 bool valid_dynkin(std::string matrix) {
