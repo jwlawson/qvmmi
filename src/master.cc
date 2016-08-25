@@ -17,7 +17,6 @@ namespace qvmmi {
 		MPI::COMM_WORLD.Recv(NULL, 0, MPI::BYTE, worker, OK_TAG);
 		int* arr = codec_.encode(matrix);
 		MPI::COMM_WORLD.Send(arr, size, MPI::INT, worker, MATRIX_TAG);
-		delete [] arr;
 	}
 
 	int Master::receive_result() {

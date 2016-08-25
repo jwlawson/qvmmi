@@ -24,6 +24,7 @@ namespace qvmmi {
 		private:
 			MPI::Status status_;
 			Codec<Matrix> codec_;
+			std::vector<int> array_cache_;
 
 			bool receive();
 			void send_result(const T& result);

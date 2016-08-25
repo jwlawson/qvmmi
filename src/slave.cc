@@ -26,12 +26,11 @@ namespace qvmmi {
 			return false;
 		}
 		MPI::COMM_WORLD.Send(NULL, 0, MPI::BYTE, MASTER, OK_TAG);
-		int* arr = new int[size];
+		array_cache_.reserve(size);
+		int* arr = array_cache_.data();
 		MPI::COMM_WORLD.Recv(arr, size, MPI::INT, MASTER, MATRIX_TAG);
 	
-		matrix_.set_matrix(codec_.decode(arr));
-		delete [] arr;
-
+		codec_.decode_into(arr, matrix_);
 		return true;
 	}
 
