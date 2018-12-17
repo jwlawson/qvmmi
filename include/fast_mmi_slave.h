@@ -3,7 +3,7 @@
  *
  * FastMMISlave class computes whether a matrix is MMI or not. The method
  * calc_result returns a value from one of -1, 0 or 1 as follows:
- * 	
+ *
  * 	-1 = Matrix is probably mutation-finite
  * 	 0 = Matrix is mutation-infinite but not minimally
  * 	 1 = Matrix is minimally mutation-infinite
@@ -18,14 +18,11 @@
 using cluster::QuiverMatrix;
 
 namespace qvmmi {
-	class FastMMISlave : public Slave<int> {
+class FastMMISlave : public Slave<int> {
+ protected:
+  virtual int calc_result();
 
-		protected:
-			virtual int calc_result();
-
-		private:
-			int mmi(Matrix& mat);
-
-	};
-}
-
+ private:
+  int mmi(Matrix& mat);
+};
+}  // namespace qvmmi

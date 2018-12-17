@@ -12,17 +12,17 @@
 
 #include <unordered_set>
 
-#include "qv/stream_extension_iterator.h"
 #include "qv/equiv_quiver_matrix.h"
+#include "qv/stream_extension_iterator.h"
 
 namespace qvmmi {
-	class FastInputMaster : public
-			FastMaster<cluster::StreamExtIterator<cluster::QuiverMatrix>, cluster::QuiverMatrix> {
-		private:
-			typedef cluster::StreamExtIterator<cluster::QuiverMatrix> Iter;
+class FastInputMaster
+    : public FastMaster<cluster::StreamExtIterator<cluster::QuiverMatrix>,
+                        cluster::QuiverMatrix> {
+ private:
+  typedef cluster::StreamExtIterator<cluster::QuiverMatrix> Iter;
 
-		public:
-			FastInputMaster(std::istream& input);
-	};
-}
-
+ public:
+  FastInputMaster(std::istream& input);
+};
+}  // namespace qvmmi

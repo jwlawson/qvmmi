@@ -4,10 +4,9 @@
 #include "fast_mmi_master.h"
 
 namespace qvmmi {
-	FastMMIMaster::FastMMIMaster(const cluster::QuiverMatrix& mat)
-		: FastMaster<Iterator, cluster::QuiverMatrix>() {
-		iter_ = Iterator(mat);
-	}
-
+FastMMIMaster::FastMMIMaster(const cluster::QuiverMatrix& mat)
+    : FastMaster<Iterator, cluster::QuiverMatrix>() {
+  iter_ = Iterator(mat);
 }
 
+}  // namespace qvmmi

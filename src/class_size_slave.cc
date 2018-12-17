@@ -7,12 +7,12 @@
 
 namespace qvmmi {
 
-	int ClassSizeSlave::calc_result() {
-		using cluster::EquivQuiverMatrix;
-		using cluster::equivsize::Size;
-		EquivQuiverMatrix m(matrix_);
-		return Size(m);
-	}
-
+int
+ClassSizeSlave::calc_result() {
+  using cluster::EquivQuiverMatrix;
+  using cluster::equivsize::Size;
+  EquivQuiverMatrix m(matrix_);
+  return Size(m);
 }
-		
+
+}  // namespace qvmmi

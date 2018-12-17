@@ -5,10 +5,9 @@
 
 namespace qvmmi {
 
-	FastInputMaster::FastInputMaster(std::istream& input)
-		: FastMaster<Iter, cluster::QuiverMatrix>() {
-		iter_ = Iter(input);
-	}
-
+FastInputMaster::FastInputMaster(std::istream& input)
+    : FastMaster<Iter, cluster::QuiverMatrix>() {
+  iter_ = Iter(input);
 }
 
+}  // namespace qvmmi
